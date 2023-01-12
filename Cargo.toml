@@ -1,0 +1,21 @@
+[package]
+name = "tensorflow-layers"
+version = "0.3.2"
+authors = ["Crowdstrike DSCI <dsci-oss@crowdstrike.com>"]
+edition = "2021"
+description = "Pure Rust implementation of layers used in Tensorflow models"
+license = "MIT"
+include = ["Cargo.toml", "README.md", "benches/*", "src/*"]
+
+[dependencies]
+ndarray = { version = "0.15.6", features = ["serde-1"] }
+serde = { version = "1.0.147", features = ["derive"] }
+num-traits = "0.2.15"
+
+[dev-dependencies]
+criterion = "0.4.0"
+lazy_static = "1.4.0"
+
+[[bench]]
+name = "benchmarks"
+harness = false
