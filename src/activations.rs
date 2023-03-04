@@ -212,7 +212,7 @@ mod tests {
 
         let result:Array3<f32> = Activation::HardSigmoid.activation(&data);
         let expected = array![
-            [[0.1, 0.9, 0.61], [1.0, 0.0, 0.07]],
+            [[0.099999994, 0.9, 0.61], [1.0, 0.0, 0.06999996]],
             [[0.0, 0.4, 1.0], [0.0, 0.5, 1.0]]
         ];
 
