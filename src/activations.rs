@@ -27,6 +27,8 @@ pub enum Activation {
     Softplus,
     /// Softsign activation function, `softsign(x) = x / (abs(x) + 1)`
     Softsign,
+    /// Swish activation function, `swish(x) = x * sigmoid(x)`
+    Swish,
     /// Hyperbolic tangent activation function.
     Tanh,
     /// No-Op
@@ -94,6 +96,8 @@ impl Activation {
             Self::Softplus => data.mapv_inplace(|elem| (1.0 + elem.exp()).ln()),
 
             Self::Softsign => data.mapv_inplace(|elem| elem / (1.0 + elem.abs())),
+
+            Self::Swish => data.mapv_inplace(|elem| elem * (1.0 / (1.0 + (-elem).exp()))),
 
             Self::Tanh => data.mapv_inplace(f32::tanh),
 
@@ -312,6 +316,27 @@ mod tests {
         Activation::Softsign.activation_mut(&mut input);
 
         assert_eq!(input, expected);
+    }
+
+    #[test]
+    fn test_switsh_1d(){
+        let data: Array1<f32> = Array1::from_shape_vec(4, vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
+
+        let result: Array1<f32> = Activation::Swish.activation(&data);
+        let expected: Array1<f32> = array![-0.23840584,  1.761594,  3.92805516, -0.006377358];
+
+        assert_eq!(expected,result);
+    }
+
+    #[test]
+    fn test_switsh_2d(){
+        let data:Array2<f32> = Array2::from_shape_vec((2,2), vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
+        
+        let result:Array2<f32> = Activation::Swish.activation(&data);
+        let expected:Array2<f32> = array![[-0.23840584,  1.761594],
+                                        [3.92805516, -0.006377358]];
+
+        assert_eq!(expected,result)
     }
 
     #[test]
