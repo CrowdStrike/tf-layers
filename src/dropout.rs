@@ -34,7 +34,7 @@ impl Dropout {
                     *y = 0.0;
                 }
                 else{
-                    *y = (1.0 / (1.0 - self.rate)) * *y;
+                    *y *= 1.0 / (1.0 - self.rate);
                 }
             }
         }
@@ -48,8 +48,30 @@ mod tests{
     #[test]
     fn test_dropout_simple(){
         let dims = (5,2);
-        let data = Array2::from_shape_vec(dims, vec![0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0]).unwrap();
+        let data = Array2::from_shape_vec(dims, vec![1.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0]).unwrap();
         let dropout = Dropout::new(0.2);
         let result = dropout.apply(&data);
+        let nb_od_zeros = result.iter().filter(|&&x| x == 0.0).count();
+        assert_eq!(nb_od_zeros, 2);
+    }
+
+    #[test]
+    fn test_one_rate(){
+        let dims = (5,2);
+        let data = Array2::from_shape_vec(dims, vec![0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0]).unwrap();
+        let dropout = Dropout::new(1.0);
+
+        let result = dropout.apply(&data);
+        assert_eq!(result, Array2::zeros(dims));
+    }
+
+    #[test]
+    fn test_zero_rate(){
+        let dims = (5,2);
+        let data = Array2::from_shape_vec(dims, vec![0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0]).unwrap();
+        let dropout = Dropout::new(0.0);
+
+        let result = dropout.apply(&data);
+        assert_eq!(result, data);
     }
 }
