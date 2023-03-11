@@ -11,6 +11,7 @@ include = ["Cargo.toml", "README.md", "benches/*", "src/*"]
 ndarray = { version = "0.15.6", features = ["serde-1"] }
 serde = { version = "1.0.147", features = ["derive"] }
 num-traits = "0.2.15"
+ndarray-rand = "0.14.0"
 
 [dev-dependencies]
 criterion = "0.4.0"

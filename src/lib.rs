@@ -29,6 +29,7 @@ mod dense;
 mod embedding;
 mod max_pooling;
 mod padding;
+mod dropout;
 
 pub use activations::Activation;
 pub use average_pooling::AveragePooling1DLayer;
@@ -38,3 +39,4 @@ pub use dense::DenseLayer;
 pub use embedding::EmbeddingLayer;
 pub use max_pooling::MaxPooling1DLayer;
 pub use padding::padding;
+pub use dropout::Dropout;

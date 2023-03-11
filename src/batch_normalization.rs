@@ -65,7 +65,7 @@ impl BatchNormalization {
                 .and(&self.beta)
                 .and(&self.moving_mean)
                 .and(&self.moving_variance)
-                .apply(|elem, g, b, m, v| *elem = (*elem - m) / (v + self.epsilon).sqrt() * g + b);
+                .for_each(|elem, g, b, m, v| *elem = (*elem - m) / (v + self.epsilon).sqrt() * g + b);
         }
     }
 }
