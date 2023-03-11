@@ -100,17 +100,15 @@ impl Activation {
                 });
             }
 
-            Self::HardSigmoid => {
-                data.mapv_inplace(|elem|{
-                    if elem < -2.5{
-                        0.0
-                    } else if elem > 2.5{
-                        1.0
-                    } else {
-                        0.2 * elem + 0.5
-                    }
-                })
-            }
+            Self::HardSigmoid => data.mapv_inplace(|elem| {
+                if elem < -2.5 {
+                    0.0
+                } else if elem > 2.5 {
+                    1.0
+                } else {
+                    0.2 * elem + 0.5
+                }
+            }),
 
             Self::Sigmoid => data.mapv_inplace(|elem| 1.0 / (1.0 + (-elem).exp())),
 
@@ -184,39 +182,39 @@ mod tests {
     }
 
     #[test]
-    fn test_hardsigmoid_1d(){
-        let data:Array1<f32> = Array1::from_shape_vec(5, vec![-3.0, -1.0, 0.0, 1.0, 3.0]).unwrap();
+    fn test_hardsigmoid_1d() {
+        let data: Array1<f32> = Array1::from_shape_vec(5, vec![-3.0, -1.0, 0.0, 1.0, 3.0]).unwrap();
 
-        let result:Array1<f32> = Activation::HardSigmoid.activation(&data);
+        let result: Array1<f32> = Activation::HardSigmoid.activation(&data);
         let expected = array![0.0, 0.3, 0.5, 0.7, 1.0];
 
         assert_eq!(expected, result);
     }
 
     #[test]
-    fn test_hardsigmoid_2d(){
-        let data:Array2<f32> = Array2::from_shape_vec((2,2),vec![-3.0, -1.0, 0.0, 1.0]).unwrap();
+    fn test_hardsigmoid_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-3.0, -1.0, 0.0, 1.0]).unwrap();
 
-        let result:Array2<f32> = Activation::HardSigmoid.activation(&data);
-        let expected = array![[0.0, 0.3],[0.5, 0.7]];
+        let result: Array2<f32> = Activation::HardSigmoid.activation(&data);
+        let expected = array![[0.0, 0.3], [0.5, 0.7]];
 
         assert_eq!(expected, result);
     }
 
     #[test]
-    fn test_hardsigmoid_3d(){
+    fn test_hardsigmoid_3d() {
         let data: Array3<f32> = array![
             [[-2.0, 2.0, 0.55], [4.0, -7.0, -2.15]],
             [[-3.0, -0.5, 3.33], [-3.66, 0.0, 2.75]]
         ];
 
-        let result:Array3<f32> = Activation::HardSigmoid.activation(&data);
+        let result: Array3<f32> = Activation::HardSigmoid.activation(&data);
         let expected = array![
             [[0.099999994, 0.9, 0.61], [1.0, 0.0, 0.06999996]],
             [[0.0, 0.4, 1.0], [0.0, 0.5, 1.0]]
         ];
 
-        assert_eq!(expected,result);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -332,23 +330,25 @@ mod tests {
     }
 
     #[test]
-    fn test_exp_1d(){
-        let data: Array1<f32> = Array1::from_shape_vec(5, vec![-3.0,-1.0, 0.0,1.0,3.0]).unwrap();
+    fn test_exp_1d() {
+        let data: Array1<f32> = Array1::from_shape_vec(5, vec![-3.0, -1.0, 0.0, 1.0, 3.0]).unwrap();
 
         let result = Activation::Exp.activation(&data);
-        let expected:Array1<f32> = Array1::from_shape_vec(5, vec![0.049787067, 0.36787945, 1., 2.7182817, 20.085537]).unwrap();
+        let expected: Array1<f32> =
+            Array1::from_shape_vec(5, vec![0.049787067, 0.36787945, 1., 2.7182817, 20.085537])
+                .unwrap();
 
-        assert_eq!(expected,result)
+        assert_eq!(expected, result)
     }
 
     #[test]
-    fn test_exp_2d(){
-        let data: Array2<f32> = Array2::from_shape_vec((2,2), vec![-3.0,-1.0, 0.0,1.0]).unwrap();
+    fn test_exp_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-3.0, -1.0, 0.0, 1.0]).unwrap();
 
         let result = Activation::Exp.activation(&data);
-        let expected =  array![[0.049787067, 0.36787945], [1., 2.7182817]];
+        let expected = array![[0.049787067, 0.36787945], [1., 2.7182817]];
 
-        assert_eq!(expected,result)
+        assert_eq!(expected, result)
     }
 
     #[test]
@@ -396,24 +396,23 @@ mod tests {
     }
 
     #[test]
-    fn test_switsh_1d(){
+    fn test_switsh_1d() {
         let data: Array1<f32> = Array1::from_shape_vec(4, vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
 
         let result: Array1<f32> = Activation::Swish.activation(&data);
-        let expected: Array1<f32> = array![-0.23840584,  1.761594,  3.92805516, -0.006377358];
+        let expected: Array1<f32> = array![-0.23840584, 1.761594, 3.92805516, -0.006377358];
 
-        assert_eq!(expected,result);
+        assert_eq!(expected, result);
     }
 
     #[test]
-    fn test_switsh_2d(){
-        let data:Array2<f32> = Array2::from_shape_vec((2,2), vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
-        
-        let result:Array2<f32> = Activation::Swish.activation(&data);
-        let expected:Array2<f32> = array![[-0.23840584,  1.761594],
-                                        [3.92805516, -0.006377358]];
+    fn test_switsh_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
 
-        assert_eq!(expected,result)
+        let result: Array2<f32> = Activation::Swish.activation(&data);
+        let expected: Array2<f32> = array![[-0.23840584, 1.761594], [3.92805516, -0.006377358]];
+
+        assert_eq!(expected, result)
     }
 
     #[test]
