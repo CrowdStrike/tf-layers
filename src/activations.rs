@@ -17,6 +17,13 @@ pub enum Activation {
     ///     if x > 0: return scale * x
     ///     if x < 0: return scale * alpha * (exp(x) - 1)
     Selu,
+    /// Exponential activation function
+    Exp,
+    /// The hard sigmoid activation function, defined as:
+    ///     f(x) = 0, for x < -2.5
+    ///     f(x) = 1, for x > 2.5
+    ///     f(x) = 0.2*x + 0,5, otherwise
+    HardSigmoid,
     /// The sigmoid activation function, `sigmoid(x) = 1 / (1 + exp(-x))`.
     Sigmoid,
     /// The softmax activation function. Softmax converts a real vector to a
@@ -27,6 +34,8 @@ pub enum Activation {
     Softplus,
     /// Softsign activation function, `softsign(x) = x / (abs(x) + 1)`
     Softsign,
+    /// Swish activation function, `swish(x) = x * sigmoid(x)`
+    Swish,
     /// Hyperbolic tangent activation function.
     Tanh,
     /// No-Op
@@ -71,6 +80,8 @@ impl Activation {
             // Convert from [a,b,c] to [activation(a), activation(b), activation(c)] (inplace)
             Self::Relu => data.mapv_inplace(|elem| f32::max(0.0, elem)),
 
+            Self::Exp => data.mapv_inplace(f32::exp),
+
             Self::ThresholdedRelu(x) => data.mapv_inplace(|elem| f32::max(x, elem)),
 
             Self::Selu => {
@@ -89,11 +100,23 @@ impl Activation {
                 });
             }
 
+            Self::HardSigmoid => data.mapv_inplace(|elem| {
+                if elem < -2.5 {
+                    0.0
+                } else if elem > 2.5 {
+                    1.0
+                } else {
+                    0.2 * elem + 0.5
+                }
+            }),
+
             Self::Sigmoid => data.mapv_inplace(|elem| 1.0 / (1.0 + (-elem).exp())),
 
             Self::Softplus => data.mapv_inplace(|elem| (1.0 + elem.exp()).ln()),
 
             Self::Softsign => data.mapv_inplace(|elem| elem / (1.0 + elem.abs())),
+
+            Self::Swish => data.mapv_inplace(|elem| elem * (1.0 / (1.0 + (-elem).exp()))),
 
             Self::Tanh => data.mapv_inplace(f32::tanh),
 
@@ -154,6 +177,42 @@ mod tests {
 
         let result: Array2<f32> = Activation::Selu.activation(&data);
         let expected: Array2<f32> = array![[-1.5201665, 2.101402], [4.202804, -1.7564961]];
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_hardsigmoid_1d() {
+        let data: Array1<f32> = Array1::from_shape_vec(5, vec![-3.0, -1.0, 0.0, 1.0, 3.0]).unwrap();
+
+        let result: Array1<f32> = Activation::HardSigmoid.activation(&data);
+        let expected = array![0.0, 0.3, 0.5, 0.7, 1.0];
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_hardsigmoid_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-3.0, -1.0, 0.0, 1.0]).unwrap();
+
+        let result: Array2<f32> = Activation::HardSigmoid.activation(&data);
+        let expected = array![[0.0, 0.3], [0.5, 0.7]];
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_hardsigmoid_3d() {
+        let data: Array3<f32> = array![
+            [[-2.0, 2.0, 0.55], [4.0, -7.0, -2.15]],
+            [[-3.0, -0.5, 3.33], [-3.66, 0.0, 2.75]]
+        ];
+
+        let result: Array3<f32> = Activation::HardSigmoid.activation(&data);
+        let expected = array![
+            [[0.099999994, 0.9, 0.61], [1.0, 0.0, 0.06999996]],
+            [[0.0, 0.4, 1.0], [0.0, 0.5, 1.0]]
+        ];
 
         assert_eq!(expected, result);
     }
@@ -271,6 +330,28 @@ mod tests {
     }
 
     #[test]
+    fn test_exp_1d() {
+        let data: Array1<f32> = Array1::from_shape_vec(5, vec![-3.0, -1.0, 0.0, 1.0, 3.0]).unwrap();
+
+        let result = Activation::Exp.activation(&data);
+        let expected: Array1<f32> =
+            Array1::from_shape_vec(5, vec![0.049787067, 0.36787945, 1., 2.7182817, 20.085537])
+                .unwrap();
+
+        assert_eq!(expected, result)
+    }
+
+    #[test]
+    fn test_exp_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-3.0, -1.0, 0.0, 1.0]).unwrap();
+
+        let result = Activation::Exp.activation(&data);
+        let expected = array![[0.049787067, 0.36787945], [1., 2.7182817]];
+
+        assert_eq!(expected, result)
+    }
+
+    #[test]
     fn test_softplus_1d() {
         let input: Array1<f32> =
             Array1::from_shape_vec(5, vec![-20.0, -1.0, 0.0, 1.0, 20.0]).unwrap();
@@ -312,6 +393,26 @@ mod tests {
         Activation::Softsign.activation_mut(&mut input);
 
         assert_eq!(input, expected);
+    }
+
+    #[test]
+    fn test_switsh_1d() {
+        let data: Array1<f32> = Array1::from_shape_vec(4, vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
+
+        let result: Array1<f32> = Activation::Swish.activation(&data);
+        let expected: Array1<f32> = array![-0.23840584, 1.761594, 3.92805516, -0.006377358];
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_switsh_2d() {
+        let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
+
+        let result: Array2<f32> = Activation::Swish.activation(&data);
+        let expected: Array2<f32> = array![[-0.23840584, 1.761594], [3.92805516, -0.006377358]];
+
+        assert_eq!(expected, result)
     }
 
     #[test]
