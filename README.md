@@ -1,6 +1,6 @@
 # Tensorflow Layers
 
-This is an auxilary crate for tf2rust which provides Rust native implementations for some of the Tensorflow models layers.
+This is an auxiliary crate for tf2rust which provides Rust native implementations for some of the Tensorflow models layers.
 
 ## Building
 

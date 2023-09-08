@@ -14,8 +14,8 @@ pub struct BatchNormalization {
 impl BatchNormalization {
     /// Construct a new [`BatchNormalization`] from predefined parameters.
     ///
-    /// Will panic if `beta`, `moving_mean` and `moving_variance`
-    /// don't have identical shapes.
+    /// # Panics
+    /// Will panic if `beta`, `moving_mean` and `moving_variance` don't have identical shapes.
     #[must_use]
     pub fn new(
         gamma: Array1<f32>,
@@ -66,13 +66,14 @@ impl BatchNormalization {
                 .and(&self.moving_mean)
                 .and(&self.moving_variance)
                 .for_each(|elem, g, b, m, v| {
-                    *elem = (*elem - m) / (v + self.epsilon).sqrt() * g + b
+                    *elem = (*elem - m) / (v + self.epsilon).sqrt() * g + b;
                 });
         }
     }
 }
 
 #[cfg(test)]
+#[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
     use ndarray::{arr2, arr3, Array2, Array3};

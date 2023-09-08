@@ -27,6 +27,9 @@ impl DenseLayer {
     }
 
     /// Returns the result of the dense layer operation on the input 2D data
+    ///
+    /// # Panics
+    /// May panic when Axis are not equal lengths.
     #[must_use]
     pub fn apply2d(&self, data: &Array2<f32>) -> Array2<f32> {
         // Since we need to compute data * self.weights + self.bias
@@ -46,6 +49,9 @@ impl DenseLayer {
     }
 
     /// Returns the result of the dense layer operation on the input 3D data
+    ///
+    /// # Panics
+    /// `weights` has to be the same shape as data.
     #[must_use]
     pub fn apply3d(&self, data: &Array3<f32>) -> Array3<f32> {
         // Since we need to compute data * self.weights + self.bias
@@ -160,7 +166,7 @@ mod tests {
         let activation = Activation::Linear;
         let dense_layer = DenseLayer::new(weights, bias, activation);
 
-        let _ = dense_layer.apply2d(&data);
+        _ = dense_layer.apply2d(&data);
     }
 
     #[test]
@@ -174,6 +180,6 @@ mod tests {
         let activation = Activation::Linear;
         let dense_layer = DenseLayer::new(weights, bias, activation);
 
-        let _ = dense_layer.apply2d(&data);
+        _ = dense_layer.apply2d(&data);
     }
 }

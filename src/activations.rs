@@ -13,7 +13,7 @@ pub enum Activation {
     ///     f(x) = x, for x > theta
     ///     f(x) = 0 otherwise`
     ThresholdedRelu(f32),
-    /// The scaled exponentian linear unit activation, defined as:
+    /// The scaled exponential linear unit activation, defined as:
     ///     if x > 0: return scale * x
     ///     if x < 0: return scale * alpha * (exp(x) - 1)
     Selu,
@@ -54,11 +54,11 @@ impl Activation {
         result
     }
 
-    /// Applies the specified activation onto an array inplace
+    /// Applies the specified activation onto an array in place
     pub fn activation_mut<D: Dimension>(self, data: &mut Array<f32, D>) {
         match self {
             // Softmax makes use of a per-row computation process
-            // Converts from [a,b,c] to [e^a / (e^a + e^b + e^c), e^b / (e^a + e^b + e^c), e^c / (e^a + e^b + e^c)] (inplace)
+            // Converts from [a,b,c] to [e^a / (e^a + e^b + e^c), e^b / (e^a + e^b + e^c), e^c / (e^a + e^b + e^c)] (in place)
             Self::Softmax => {
                 let axis = data.ndim() - 1;
 
@@ -67,7 +67,7 @@ impl Activation {
                 for mut row in data.lanes_mut(Axis(axis)) {
                     // find the maximum element from the array
                     let maximum_elem: f32 = row.fold(f32::NEG_INFINITY, |a, b| f32::max(a, *b));
-                    // substract the maximum from each element of the array and compute the exponential function.
+                    // subtract the maximum from each element of the array and compute the exponential function.
                     row.mapv_inplace(|elem| f32::exp(elem - maximum_elem));
                     // get the sum all of the exponentials
                     let sum_of_row_exponentials = row.sum();
@@ -126,6 +126,9 @@ impl Activation {
 }
 
 #[cfg(test)]
+#[allow(clippy::excessive_precision)]
+#[allow(clippy::approx_constant)]
+#[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
     use ndarray::{array, Array1, Array2, Array3};
@@ -396,7 +399,7 @@ mod tests {
     }
 
     #[test]
-    fn test_switsh_1d() {
+    fn test_swish_1d() {
         let data: Array1<f32> = Array1::from_shape_vec(4, vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
 
         let result: Array1<f32> = Activation::Swish.activation(&data);
@@ -406,7 +409,7 @@ mod tests {
     }
 
     #[test]
-    fn test_switsh_2d() {
+    fn test_swish_2d() {
         let data: Array2<f32> = Array2::from_shape_vec((2, 2), vec![-2.0, 2.0, 4.0, -7.0]).unwrap();
 
         let result: Array2<f32> = Activation::Swish.activation(&data);

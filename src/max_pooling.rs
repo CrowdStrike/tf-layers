@@ -20,6 +20,7 @@ pub struct MaxPooling1DLayer {
 impl MaxPooling1DLayer {
     /// Returns a new [`MaxPooling1DLayer`] from predefined parameters.
     ///
+    /// # Panics
     /// Will panic if `pool_size` or `strides` are 0 or if the padding is empty.
     #[must_use]
     pub fn new(
@@ -42,11 +43,14 @@ impl MaxPooling1DLayer {
 
     /// Apply max pooling on the input data.
     /// Note: The pooling shape is `(self.pool_size,)` for 1d arrays and `(self.pool_size, 1, 1, ...)` for Nd arrays.
-    ///       Simmilarly, the stride is `(self.strides,)` for 1d arrays and `(self.strides, 1, 1, ...)` for Nd arrays
+    ///       Similarly, the stride is `(self.strides,)` for 1d arrays and `(self.strides, 1, 1, ...)` for Nd arrays
+    ///
+    /// # Panics
+    /// Pooling cannot be larger than the data.
     #[must_use]
     pub fn apply<D: Dimension>(&self, data: &Array<f32, D>) -> Array<f32, D> {
         // Data must be padded before applying the pooling layer.
-        // padding will fail if data.ndim() != pdding.len() \
+        // padding will fail if data.ndim() != padding.len() \
         let data = padding(data, &self.padding);
 
         // Compute the output shape
@@ -86,6 +90,9 @@ impl MaxPooling1DLayer {
 }
 
 #[cfg(test)]
+#[allow(clippy::cast_precision_loss)]
+#[allow(clippy::excessive_precision)]
+#[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
     use ndarray::{array, Array1, Array2, Array3};
@@ -131,9 +138,9 @@ mod tests {
     fn test_maxpooling() {
         let data: Array3<f32> = Array3::from_shape_fn([2, 5, 5], |(i, j, k)| {
             if i % 2 == 0 {
-                return (i + j + k) as f32;
+                (i + j + k) as f32
             } else {
-                return -((i + j + k) as f32);
+                -((i + j + k) as f32)
             }
         });
         let maxpooling_layer = MaxPooling1DLayer::new(3, 2, vec![(0, 0), (2, 3), (0, 0)]);
@@ -206,12 +213,12 @@ mod tests {
     fn test_maxpooling_panic_higher_pool_size() {
         let data: Array3<f32> = Array3::from_shape_fn([2, 3, 3], |(i, j, k)| {
             if i % 2 == 0 {
-                return (i + j + k) as f32;
+                (i + j + k) as f32
             } else {
-                return -((i + j + k) as f32);
+                -((i + j + k) as f32)
             }
         });
         let maxpooling_layer = MaxPooling1DLayer::new(7, 2, [(0, 0), (2, 1), (0, 0)].to_vec());
-        let _ = maxpooling_layer.apply(&data);
+        _ = maxpooling_layer.apply(&data);
     }
 }

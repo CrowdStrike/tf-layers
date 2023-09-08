@@ -1,3 +1,6 @@
+// Copyright (c) 2020-2023, CrowdStrike, Inc. All rights reserved.
+// Authors: marian.radu@crowdstrike.com
+
 use crate::padding::padding;
 use ndarray::{Array, Axis, Dimension};
 use serde::{Deserialize, Serialize};
@@ -21,6 +24,10 @@ impl AveragePooling1DLayer {
     /// Returns a new [`AveragePooling1DLayer`] from predefined parameters.
     ///
     /// Will panic if `pool_size` or `strides` are 0 or if the padding is empty.
+    ///
+    /// # Panics
+    /// May panic if `strides` and `pool_size` are more then 0.
+    /// May panic if `padding` is empty.
     #[must_use]
     pub fn new(
         pool_size: usize,
@@ -42,11 +49,14 @@ impl AveragePooling1DLayer {
 
     /// Apply average pooling on the input data.
     /// Note: The pooling shape is `(self.pool_size,)` for 1d arrays and `(self.pool_size, 1, 1, ...)` for Nd arrays.
-    ///       Simmilarly, the stride is `(self.strides,)` for 1d arrays and `(self.strides, 1, 1, ...)` for Nd arrays
+    ///       Similarly, the stride is `(self.strides,)` for 1d arrays and `(self.strides, 1, 1, ...)` for Nd arrays
+    ///
+    /// # Panics
+    /// Pooling cannot be larger than the data!
     #[must_use]
     pub fn apply<D: Dimension>(&self, data: &Array<f32, D>) -> Array<f32, D> {
         // Data must be padded before applying the pooling layer.
-        // padding will fail if data.ndim() != pdding.len() \
+        // padding will fail if data.ndim() != padding.len() \
         let data = padding(data, &self.padding);
 
         // Compute the output shape
@@ -86,6 +96,9 @@ impl AveragePooling1DLayer {
 }
 
 #[cfg(test)]
+#[allow(clippy::cast_precision_loss)]
+#[allow(clippy::excessive_precision)]
+#[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
     use ndarray::{array, Array1, Array2, Array3};
@@ -196,13 +209,13 @@ mod tests {
     fn test_averagepooling_panic_higher_pool_size() {
         let data: Array3<f32> = Array3::from_shape_fn([2, 3, 3], |(i, j, k)| {
             if i % 2 == 0 {
-                return (i + j + k) as f32;
+                (i + j + k) as f32
             } else {
-                return -((i + j + k) as f32);
+                -((i + j + k) as f32)
             }
         });
         // panics because pool_size=7 is greater than 3 (rows) + 2 + 1 (padding) = 6
         let averagepooling_layer = AveragePooling1DLayer::new(7, 2, vec![(0, 0), (2, 1), (0, 0)]);
-        let _ = averagepooling_layer.apply(&data);
+        _ = averagepooling_layer.apply(&data);
     }
 }

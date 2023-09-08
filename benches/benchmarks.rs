@@ -1,3 +1,6 @@
+#![allow(clippy::cast_precision_loss)]
+#![allow(clippy::wildcard_imports)]
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -23,7 +26,7 @@ fn bench_2d_dense_layer(c: &mut Criterion) {
     let dense_layer = DenseLayer::new(weights, bias, activation);
 
     c.bench_function("2d_dense_layer", |b| {
-        b.iter(|| dense_layer.apply2d(black_box(&INPUT2D)))
+        b.iter(|| dense_layer.apply2d(black_box(&INPUT2D)));
     });
 }
 
@@ -34,7 +37,7 @@ fn bench_3d_dense_layer(c: &mut Criterion) {
     let dense_layer = DenseLayer::new(weights, bias, activation);
 
     c.bench_function("3d_dense_layer", |b| {
-        b.iter(|| dense_layer.apply3d(black_box(&INPUT3D)))
+        b.iter(|| dense_layer.apply3d(black_box(&INPUT3D)));
     });
 }
 
@@ -50,7 +53,7 @@ fn bench_conv1d_layer(c: &mut Criterion) {
     );
 
     c.bench_function("conv1d_layer", |b| {
-        b.iter(|| conv1d_layer.apply(black_box(&INPUT3D)))
+        b.iter(|| conv1d_layer.apply(black_box(&INPUT3D)));
     });
 }
 
@@ -61,7 +64,7 @@ fn bench_1d_embedding_layer(c: &mut Criterion) {
     let embedding_layer = EmbeddingLayer::new(weights);
 
     c.bench_function("1d_embedding_layer", |b| {
-        b.iter(|| embedding_layer.apply(black_box(&INPUT1D_USIZE)))
+        b.iter(|| embedding_layer.apply(black_box(&INPUT1D_USIZE)));
     });
 }
 
@@ -72,7 +75,7 @@ fn bench_2d_embedding_layer(c: &mut Criterion) {
     let embedding_layer = EmbeddingLayer::new(weights);
 
     c.bench_function("2d_embedding_layer", |b| {
-        b.iter(|| embedding_layer.apply(black_box(&INPUT2D_USIZE)))
+        b.iter(|| embedding_layer.apply(black_box(&INPUT2D_USIZE)));
     });
 }
 
@@ -83,67 +86,67 @@ fn bench_3d_embedding_layer(c: &mut Criterion) {
     let embedding_layer = EmbeddingLayer::new(weights);
 
     c.bench_function("3d_embedding_layer", |b| {
-        b.iter(|| embedding_layer.apply(black_box(&INPUT3D_USIZE)))
+        b.iter(|| embedding_layer.apply(black_box(&INPUT3D_USIZE)));
     });
 }
 
 fn bench_1d_padding_layer(c: &mut Criterion) {
     c.bench_function("1d_padding_layer", |b| {
-        b.iter(|| padding(black_box(&INPUT1D_USIZE), &[(3, 2)]))
+        b.iter(|| padding(black_box(&INPUT1D_USIZE), &[(3, 2)]));
     });
 }
 
 fn bench_2d_padding_layer(c: &mut Criterion) {
     c.bench_function("2d_padding_layer", |b| {
-        b.iter(|| padding(black_box(&INPUT2D_USIZE), &[(2, 3), (2, 3)]))
+        b.iter(|| padding(black_box(&INPUT2D_USIZE), &[(2, 3), (2, 3)]));
     });
 }
 
 fn bench_3d_padding_layer(c: &mut Criterion) {
     c.bench_function("3d_padding_layer", |b| {
-        b.iter(|| padding(black_box(&INPUT3D_USIZE), &[(2, 1), (2, 3), (0, 1)]))
+        b.iter(|| padding(black_box(&INPUT3D_USIZE), &[(2, 1), (2, 3), (0, 1)]));
     });
 }
 
 fn bench_1d_max_pooling1d(c: &mut Criterion) {
     let pooling_layer = MaxPooling1DLayer::new(3, 2, vec![(3, 2)]);
     c.bench_function("1d_max_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT1D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT1D)));
     });
 }
 
 fn bench_2d_max_pooling1d(c: &mut Criterion) {
     let pooling_layer = MaxPooling1DLayer::new(3, 2, vec![(2, 3), (2, 3)]);
     c.bench_function("2d_max_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT2D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT2D)));
     });
 }
 
 fn bench_3d_max_pooling1d(c: &mut Criterion) {
     let pooling_layer = MaxPooling1DLayer::new(3, 2, vec![(2, 1), (2, 3), (0, 1)]);
     c.bench_function("3d_max_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT3D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT3D)));
     });
 }
 
 fn bench_1d_avg_pooling1d(c: &mut Criterion) {
     let pooling_layer = AveragePooling1DLayer::new(3, 2, vec![(2, 5)]);
     c.bench_function("1d_avg_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT1D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT1D)));
     });
 }
 
 fn bench_2d_avg_pooling1d(c: &mut Criterion) {
     let pooling_layer = AveragePooling1DLayer::new(3, 2, vec![(2, 3), (2, 3)]);
     c.bench_function("2d_avg_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT2D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT2D)));
     });
 }
 
 fn bench_3d_avg_pooling1d(c: &mut Criterion) {
     let pooling_layer = AveragePooling1DLayer::new(3, 2, vec![(2, 1), (2, 3), (0, 1)]);
     c.bench_function("3d_avg_pooling1d", |b| {
-        b.iter(|| pooling_layer.apply(black_box(&INPUT3D)))
+        b.iter(|| pooling_layer.apply(black_box(&INPUT3D)));
     });
 }
 
@@ -159,7 +162,7 @@ fn bench_1d_batch_normalization(c: &mut Criterion) {
     );
 
     c.bench_function("1d_batch_normalization", |b| {
-        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT1D)))
+        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT1D)));
     });
 }
 
@@ -174,7 +177,7 @@ fn bench_2d_batch_normalization(c: &mut Criterion) {
         BatchNormalization::new(gamma, beta, moving_mean, moving_variance, epsilon);
 
     c.bench_function("2d_batch_normalization", |b| {
-        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT2D)))
+        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT2D)));
     });
 }
 
@@ -189,23 +192,23 @@ fn bench_3d_batch_normalization(c: &mut Criterion) {
         BatchNormalization::new(gamma, beta, moving_mean, moving_variance, epsilon);
 
     c.bench_function("3d_batch_normalization", |b| {
-        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT3D)))
+        b.iter(|| batch_normalization_layer.apply(black_box(&INPUT3D)));
     });
 }
 
 fn bench_1d_softmax_activation(c: &mut Criterion) {
     c.bench_function("1d_softmax_activation", |b| {
-        b.iter(|| Activation::Softmax.activation(black_box(&INPUT1D)))
+        b.iter(|| Activation::Softmax.activation(black_box(&INPUT1D)));
     });
 }
 fn bench_2d_softmax_activation(c: &mut Criterion) {
     c.bench_function("2d_softmax_activation", |b| {
-        b.iter(|| Activation::Softmax.activation(black_box(&INPUT2D)))
+        b.iter(|| Activation::Softmax.activation(black_box(&INPUT2D)));
     });
 }
 fn bench_3d_softmax_activation(c: &mut Criterion) {
     c.bench_function("3d_softmax_activation", |b| {
-        b.iter(|| Activation::Softmax.activation(black_box(&INPUT3D)))
+        b.iter(|| Activation::Softmax.activation(black_box(&INPUT3D)));
     });
 }
 

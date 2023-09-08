@@ -20,6 +20,9 @@ pub struct Conv1DLayer {
 
 impl Conv1DLayer {
     /// Returns a new [`Conv1DLayer`] from predefined parameters.
+    ///
+    /// # Panics
+    /// If `weights` cannot be converted to the output shape.
     #[must_use]
     pub fn new(
         weights: Array3<f32>,
@@ -61,6 +64,11 @@ impl Conv1DLayer {
     }
 
     /// Returns a convolution of this kernel with the input data
+    ///
+    /// # Panics
+    /// Input data and Conv1DLayer's weights must have the same number of columns.
+    ///
+    /// Kernel cannot be larger than the data (this includes padding).
     #[must_use]
     pub fn apply(&self, data: &Array3<f32>) -> Array3<f32> {
         // Data must be padded before applying the pooling layer.
@@ -151,6 +159,7 @@ impl Conv1DLayer {
 }
 
 #[cfg(test)]
+#[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
     use ndarray::{arr3, Array, Array1, Array3};
@@ -309,7 +318,7 @@ mod tests {
             Activation::Linear,
         );
 
-        let _ = conv1d_layer.apply(&data);
+        _ = conv1d_layer.apply(&data);
     }
 
     #[test]
@@ -327,7 +336,7 @@ mod tests {
             Activation::Linear,
         );
 
-        let _ = conv1d_layer.apply(&data);
+        _ = conv1d_layer.apply(&data);
     }
 
     #[test]
@@ -346,6 +355,6 @@ mod tests {
             Activation::Linear,
         );
 
-        let _ = conv1d_layer.apply(&data);
+        _ = conv1d_layer.apply(&data);
     }
 }
