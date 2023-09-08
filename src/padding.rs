@@ -21,6 +21,9 @@ use ndarray::Axis;
 /// 1 1 1      1 1 1
 ///            0 0 0
 /// ```
+///
+/// # Panics
+/// May panic if `ndim` of `data` is not the same length as `pad_with`.
 #[must_use]
 pub fn padding<A, S, D>(data: &ArrayBase<S, D>, pad_width: &[(usize, usize)]) -> Array<A, D>
 where

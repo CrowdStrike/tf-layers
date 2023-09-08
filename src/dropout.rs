@@ -13,7 +13,7 @@ impl Dropout {
     /// This creates a new Dropout layer with the rate set
     #[must_use]
     pub fn new(rate: f32) -> Dropout {
-        Dropout { rate: rate }
+        Dropout { rate }
     }
 
     /// Randomly sets the input units to 0 with a frequency of rate
@@ -24,18 +24,17 @@ impl Dropout {
 
         let nb_dropouts = (data.len() as f32 * self.rate) as usize;
 
-        if self.rate == 1 as f32 {
+        if self.rate == 1_f32 {
             return Array2::zeros(data.dim());
-        } else {
-            let mut rng = rand::thread_rng();
-            let idx_to_drop =
-                rand::seq::index::sample(&mut rng, data.len(), nb_dropouts).into_vec();
-            for (x, y) in data.iter_mut().enumerate() {
-                if idx_to_drop.contains(&x) {
-                    *y = 0.0;
-                } else {
-                    *y *= 1.0 / (1.0 - self.rate);
-                }
+        }
+
+        let mut rng = rand::thread_rng();
+        let idx_to_drop = rand::seq::index::sample(&mut rng, data.len(), nb_dropouts).into_vec();
+        for (x, y) in data.iter_mut().enumerate() {
+            if idx_to_drop.contains(&x) {
+                *y = 0.0;
+            } else {
+                *y *= 1.0 / (1.0 - self.rate);
             }
         }
         data

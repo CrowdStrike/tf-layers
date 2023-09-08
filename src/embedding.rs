@@ -164,7 +164,7 @@ mod tests {
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
-        let _ = embedding_layer.apply(&data);
+        _ = embedding_layer.apply(&data);
     }
 
     #[test]
@@ -177,6 +177,6 @@ mod tests {
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
-        let _ = embedding_layer.apply(&data);
+        _ = embedding_layer.apply(&data);
     }
 }
