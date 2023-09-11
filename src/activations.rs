@@ -341,7 +341,7 @@ mod tests {
             Array1::from_shape_vec(5, vec![0.049787067, 0.36787945, 1., 2.7182817, 20.085537])
                 .unwrap();
 
-        assert_eq!(expected, result)
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -351,7 +351,7 @@ mod tests {
         let result = Activation::Exp.activation(&data);
         let expected = array![[0.049787067, 0.36787945], [1., 2.7182817]];
 
-        assert_eq!(expected, result)
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -415,7 +415,7 @@ mod tests {
         let result: Array2<f32> = Activation::Swish.activation(&data);
         let expected: Array2<f32> = array![[-0.23840584, 1.761594], [3.92805516, -0.006377358]];
 
-        assert_eq!(expected, result)
+        assert_eq!(expected, result);
     }
 
     #[test]

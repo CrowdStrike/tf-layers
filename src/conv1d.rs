@@ -66,7 +66,7 @@ impl Conv1DLayer {
     /// Returns a convolution of this kernel with the input data
     ///
     /// # Panics
-    /// Input data and Conv1DLayer's weights must have the same number of columns.
+    /// Input data and `Conv1DLayer`'s weights must have the same number of columns.
     ///
     /// Kernel cannot be larger than the data (this includes padding).
     #[must_use]
