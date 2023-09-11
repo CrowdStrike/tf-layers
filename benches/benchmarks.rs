@@ -57,6 +57,14 @@ fn bench_conv1d_layer(c: &mut Criterion) {
     });
 }
 
+fn bench_dropout_layer(c: &mut Criterion) {
+    let dropout_layer = Dropout::new(0.2);
+
+    c.bench_function("dropout_layer", |b| {
+        b.iter(|| dropout_layer.apply(black_box(&INPUT2D)));
+    });
+}
+
 fn bench_1d_embedding_layer(c: &mut Criterion) {
     let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
         .into_shape([1000, 1])
@@ -217,6 +225,7 @@ criterion_group!(
     bench_2d_dense_layer,
     bench_3d_dense_layer,
     bench_conv1d_layer,
+    bench_dropout_layer,
     bench_1d_embedding_layer,
     bench_2d_embedding_layer,
     bench_3d_embedding_layer,
