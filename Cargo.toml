@@ -10,9 +10,9 @@ include = ["Cargo.toml", "README.md", "benches/*", "src/*"]
 
 [dependencies]
 ndarray = { version = "0.15.5", features = ["serde-1"] }
-serde = { version = "1.0.188", features = ["derive"] }
-num-traits = "0.2.15"
 ndarray-rand = "0.14.0"
+num-traits = "0.2.14"
+serde = { version = "1.0.188", features = ["derive"] }
 
 [dev-dependencies]
 criterion = "0.5.1"
