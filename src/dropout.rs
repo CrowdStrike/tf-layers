@@ -31,7 +31,7 @@ impl Dropout {
             return Array2::zeros(data.dim());
         }
 
-        if self.rate == 0_f32 {
+        if self.rate.abs() < 0.000_001 {
             return data.clone();
         }
 
