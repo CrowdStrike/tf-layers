@@ -26,8 +26,8 @@ impl AveragePooling1DLayer {
     /// Will panic if `pool_size` or `strides` are 0 or if the padding is empty.
     ///
     /// # Panics
-    /// May panic if `strides` and `pool_size` are more then 0.
-    /// May panic if `padding` is empty.
+    /// Will panic if `strides` or `pool_size` equal 0.
+    /// Will panic if `padding` is empty.
     #[must_use]
     pub fn new(
         pool_size: usize,

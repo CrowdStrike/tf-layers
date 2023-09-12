@@ -29,7 +29,7 @@ impl DenseLayer {
     /// Returns the result of the dense layer operation on the input 2D data
     ///
     /// # Panics
-    /// May panic when Axis are not equal lengths.
+    /// Will panic when `data` axes are not equal lengths.
     #[must_use]
     pub fn apply2d(&self, data: &Array2<f32>) -> Array2<f32> {
         // Since we need to compute data * self.weights + self.bias
