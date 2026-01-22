@@ -4,7 +4,7 @@
 #[macro_use]
 extern crate lazy_static;
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use ndarray::*;
 use tensorflow_layers::*;
 

@@ -54,14 +54,14 @@ impl EmbeddingLayer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ndarray::{arr3, array, Array, Array2, Array3, Array4};
+    use ndarray::{Array, Array2, Array3, Array4, arr3, array};
 
     #[test]
     fn test_embedding_2d() {
         let data: Array2<usize> = array![[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7]];
 
         let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
-            .into_shape([100, 10])
+            .into_shape_with_order([100, 10])
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
@@ -96,7 +96,7 @@ mod tests {
         let data: Array2<u16> = array![[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7]];
 
         let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
-            .into_shape([100, 10])
+            .into_shape_with_order([100, 10])
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
@@ -131,7 +131,7 @@ mod tests {
         let data: Array3<usize> = array![[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [1, 4, 7]]];
 
         let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
-            .into_shape([100, 10])
+            .into_shape_with_order([100, 10])
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
@@ -160,7 +160,7 @@ mod tests {
         let data: Array2<usize> = array![[1, 2, 3], [4, 5, 100], [7, 8, 9], [1, 4, 7]];
 
         let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
-            .into_shape([100, 10])
+            .into_shape_with_order([100, 10])
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 
@@ -173,7 +173,7 @@ mod tests {
         let data: Array3<usize> = array![[[1, 2, 3], [4, 5, 100]], [[7, 8, 9], [1, 4, 7]]];
 
         let weights: Array2<f32> = Array::linspace(1., 1000., 1000)
-            .into_shape([100, 10])
+            .into_shape_with_order([100, 10])
             .unwrap();
         let embedding_layer = EmbeddingLayer::new(weights);
 

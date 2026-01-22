@@ -1,5 +1,5 @@
 use ndarray::{Array2, Zip};
-use ndarray_rand::{rand, rand_distr::Bernoulli, RandomExt};
+use ndarray_rand::{RandomExt, rand, rand_distr::Bernoulli};
 use serde::{Deserialize, Serialize};
 
 /// The implementation of Dropout layer
@@ -36,7 +36,7 @@ impl Dropout {
         }
 
         let mut res: Array2<f32> = data.clone();
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         let mask2 = Array2::random_using(
             data.dim(),

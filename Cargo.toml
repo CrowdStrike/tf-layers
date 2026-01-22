@@ -1,22 +1,22 @@
 [package]
+rust-version = "1.85.0"
 name = "tensorflow-layers"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Crowdstrike DSCI <dsci-oss@crowdstrike.com>"]
-edition = "2021"
-rust = "1.60.0"
+edition = "2024"
 description = "Pure Rust implementation of layers used in Tensorflow models"
 license = "MIT"
 include = ["Cargo.toml", "README.md", "benches/*", "src/*"]
 
 [dependencies]
-ndarray = { version = "0.15.5", features = ["serde-1"] }
-ndarray-rand = "0.14.0"
-num-traits = "0.2.14"
-serde = { version = "1.0.188", features = ["derive"] }
+ndarray = { version = "0.17.2", features = ["serde"] }
+ndarray-rand = "0.16.0"
+num-traits = "0.2.19"
+serde = { version = "1.0.228", features = ["derive"] }
 
 [dev-dependencies]
-criterion = "0.5.1"
-lazy_static = "1.4.0"
+criterion = "0.8.1"
+lazy_static = "1.5.0"
 
 [[bench]]
 name = "benchmarks"

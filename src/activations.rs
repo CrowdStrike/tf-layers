@@ -131,7 +131,7 @@ impl Activation {
 #[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
-    use ndarray::{array, Array1, Array2, Array3};
+    use ndarray::{Array1, Array2, Array3, array};
 
     #[test]
     fn test_relu_1d() {

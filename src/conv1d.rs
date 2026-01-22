@@ -46,7 +46,10 @@ impl Conv1DLayer {
                 weights.raw_dim()[0],
                 weights.raw_dim()[1] * weights.raw_dim()[2],
             ];
-            weights.into_shape(output_shape).unwrap().reversed_axes()
+            weights
+                .into_shape_with_order(output_shape)
+                .unwrap()
+                .reversed_axes()
         };
 
         Conv1DLayer {
@@ -146,7 +149,7 @@ impl Conv1DLayer {
         // is reconstructed back from 2D to 3D.
         let mut result = data_intermediate
             .dot(&self.weights)
-            .into_shape(out_shape)
+            .into_shape_with_order(out_shape)
             .unwrap();
 
         // Apply the bias
@@ -162,7 +165,7 @@ impl Conv1DLayer {
 #[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
-    use ndarray::{arr3, Array, Array1, Array3};
+    use ndarray::{Array, Array1, Array3, arr3};
 
     #[test]
     fn test_conv1d_simple() {
