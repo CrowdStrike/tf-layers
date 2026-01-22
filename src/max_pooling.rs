@@ -95,7 +95,7 @@ impl MaxPooling1DLayer {
 #[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
-    use ndarray::{array, Array1, Array2, Array3};
+    use ndarray::{Array1, Array2, Array3, array};
 
     #[test]
     fn test_maxpooling1d() {
@@ -200,8 +200,12 @@ mod tests {
                 ]
             ],
             [
-                [0.0, 5.975927, 3.1096065, 5.774783, 4.3322973, 3.3641431, 0.0],
-                [0.0, 4.976529, 5.649868, 2.2129567, 1.3772863, 4.3095136, 0.0]
+                [
+                    0.0, 5.975927, 3.1096065, 5.774783, 4.3322973, 3.3641431, 0.0
+                ],
+                [
+                    0.0, 4.976529, 5.649868, 2.2129567, 1.3772863, 4.3095136, 0.0
+                ]
             ]
         ];
 

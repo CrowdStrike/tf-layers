@@ -76,7 +76,7 @@ impl BatchNormalization {
 #[allow(clippy::unreadable_literal)]
 mod tests {
     use super::*;
-    use ndarray::{arr2, arr3, Array2, Array3};
+    use ndarray::{Array2, Array3, arr2, arr3};
 
     #[test]
     fn test_batchnormalization_1d() {
